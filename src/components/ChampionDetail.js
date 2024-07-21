@@ -6,6 +6,7 @@ const ChampionDetail = () => {
     const [champion, setChampion] = useState(null);
     const [skins, setSkins] = useState([]);
     const [skills, setSkills] = useState([]);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         async function fetchChampionData() {
@@ -15,9 +16,7 @@ const ChampionDetail = () => {
             try {
                 // Fetch champion data
                 const champResponse = await fetch(champUrl);
-                if (!champResponse.ok) {
-                    throw new Error(`Champion data fetch error: ${champResponse.status}`);
-                }
+                if (!champResponse.ok) throw new Error(`Champion data fetch error: ${champResponse.status}. \n Champion info not added yet.`);
                 const champJson = await champResponse.json();
                 const champData = champJson.data[championName];
 
@@ -34,9 +33,7 @@ const ChampionDetail = () => {
 
                     // Get skins
                     const skinResponse = await fetch(skillUrl);
-                    if (!skinResponse.ok) {
-                        throw new Error(`Skin data fetch error: ${skinResponse.status}`);
-                    }
+                    if (!skinResponse.ok) throw new Error(`Skin data fetch error: ${skinResponse.status}. \n Champion info not added yet.`);
                     const skinJson = await skinResponse.json();
                     const skinData = skinJson.data[championName];
 
@@ -53,44 +50,46 @@ const ChampionDetail = () => {
                     console.error('Champion not found');
                 }
             } catch (error) {
-                console.error(error.message);
+                setError(error.message);
             }
         }
 
         fetchChampionData();
     }, [championName]);
 
+    if (error) {
+        return <div className="min-h-screen flex items-center justify-center text-red-600">{error}</div>;
+    }
+
     if (!champion) {
-        return <div>Loading...</div>;
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="w-16 h-16 border-4 border-gray-200 border-t-transparent border-solid rounded-full animate-spin"></div>
+            </div>
+        );
     }
 
     return (
         <div
-            className="min-h-screen flex flex-col p-4"
-            style={{
-                backgroundImage: `url(${champion.splash})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundAttachment: 'fixed',
-                backgroundRepeat: 'no-repeat'
-            }}
+            className="relative min-h-screen flex flex-col p-4 sm:p-6 md:p-8 lg:p-10"
+            style={{ backgroundImage: `url(${champion.splash})`, backgroundSize: 'cover' }}
         >
-            <div className="bg-white bg-opacity-50 p-6 rounded-lg mx-4 md:mx-8 mt-8">
-                <div className="flex flex-col md:flex-row items-start">
-                    <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-4">
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-70"></div>
+            <div className="relative z-10 bg-white bg-opacity-50 p-6 rounded-lg mx-4 md:mx-8 mt-8">
+                <div className="flex flex-col md:flex-row gap-4 md:gap-8">
+                    <div className="flex-shrink-0">
                         <img
                             alt={champion.name}
-                            className="w-48 h-48 object-cover border-4 border-gray-300 rounded-full"
+                            className="w-32 md:w-48 h-auto object-cover border-4 border-gray-300 rounded-full"
                             src={champion.image}
                         />
                     </div>
-
                     <div className="flex-1">
-                        <h1 className="text-5xl font-extrabold italic text-yellow-400">{champion.name}</h1>
-                        <h2 className="text-2xl font-semibold text-gray-800 mt-2">{champion.title}</h2>
-                        <p className="text-lg font-medium mt-2"><strong>Class:</strong> {champion.tag.join(', ')}</p>
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold italic text-yellow-400">{champion.name}</h1>
+                        <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mt-2">{champion.title}</h2>
+                        <p className="text-lg mt-2"><strong>Class:</strong> {champion.tag.join(', ')}</p>
                         <p className="text-lg mt-2">{champion.blurb}</p>
-                        <div className="mt-4 flex gap-x-3">
+                        <div className="mt-4 flex gap-x-3 flex-wrap">
                             <p className="font-medium"><strong>Attack:</strong> {champion.info.attack}</p>
                             <p className="font-medium"><strong>Defense:</strong> {champion.info.defense}</p>
                             <p className="font-medium"><strong>Magic:</strong> {champion.info.magic}</p>
@@ -100,7 +99,7 @@ const ChampionDetail = () => {
                 </div>
             </div>
 
-            <div className="bg-white bg-opacity-50 p-4 rounded-lg mx-4 md:mx-8 mt-8">
+            <div className="bg-white bg-opacity-50 p-4 rounded-lg mx-4 md:mx-8 mt-8 shadow-lg">
                 <h2 className="text-2xl font-semibold mb-4">Skins</h2>
                 <div className="flex overflow-x-auto space-x-4 pb-4">
                     {skins.map(skin => (
@@ -111,14 +110,16 @@ const ChampionDetail = () => {
                                 src={`https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championName}_${skin.num}.jpg`}
                             />
                             <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-50 p-2 text-center text-white">
-                                <p className="text-lg font-medium">{skin.name}</p>
+                                <p className="text-lg font-medium">
+                                    {skin.name === "default" ? champion.name : skin.name}
+                                </p>
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
 
-            <div className="bg-white bg-opacity-50 p-4 rounded-lg mx-4 md:mx-8 mt-8">
+            <div className="bg-white bg-opacity-50 p-4 rounded-lg mx-4 md:mx-8 mt-8 shadow-lg">
                 <div className="skills">
                     <h2 className="text-2xl font-semibold mb-4">Skills</h2>
                     <div className="flex flex-col gap-4">

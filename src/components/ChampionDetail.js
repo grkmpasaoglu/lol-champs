@@ -124,9 +124,16 @@ const ChampionDetail = () => {
                     <h2 className="text-2xl font-semibold mb-4">Skills</h2>
                     <div className="flex flex-col gap-4">
                         {skills.map(skill => (
-                            <div key={skill.id} className="p-4 border-b border-gray-200">
-                                <h3 className="text-lg font-semibold text-gray-800">{skill.name}</h3>
-                                <p className="text-gray-600">{skill.description}</p>
+                            <div key={skill.id} className="flex items-center p-4 border-b border-gray-200">
+                                <img
+                                    alt={skill.id}
+                                    className="w-12 h-12 object-cover mr-4"
+                                    src={`https://ddragon.leagueoflegends.com/cdn/14.12.1/img/spell/${skill.id}.png`}
+                                />
+                                <div>
+                                    <h3 className="text-lg font-semibold text-gray-800">{skill.name}</h3>
+                                    <p className="text-gray-600">{skill.description}</p>
+                                </div>
                             </div>
                         ))}
                     </div>

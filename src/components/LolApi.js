@@ -18,7 +18,8 @@ const LolApi = () => {
                 const champs = Object.keys(json.data).map(key => ({
                     name: key,
                     title: json.data[key].title,
-                    id: json.data[key].id
+                    id: json.data[key].id,
+                    splash: `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${json.data[key].id}_0.jpg` // Splash URL ekleniyor
                 }));
                 setChampions(champs);
             } catch (error) {
@@ -39,8 +40,26 @@ const LolApi = () => {
     );
 
     return (
-        <div>
-            <div className='py-4 px-28'>
+        <div
+            style={{
+                backgroundImage: `url('https://wallpapers.com/images/featured/league-of-legends-background-a1iu7ppvueyfvfdw.jpg')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundAttachment: 'fixed',
+                minHeight: '100vh'
+            }}
+        >
+            {/* Logo Container */}
+            <div className="flex items-center justify-center py-4">
+                <img
+                    alt="League of Legends Logo"
+                    src="https://upload.wikimedia.org/wikipedia/tr/7/77/League_of_Legends_logo.png"
+                    className="w-52 h-auto" // Resim boyutunu ayarlayın
+                />
+            </div>
+
+            {/* Search Input */}
+            <div className="py-4 px-28">
                 <input
                     className="border border-gray-700 text-lg p-2 w-full rounded-md"
                     type="text"
@@ -50,20 +69,23 @@ const LolApi = () => {
                 />
             </div>
 
+            {/* Champions Display */}
             <div className="flex justify-center items-center text-center flex-wrap gap-4 p-4">
                 {filteredChampions.map(champion => (
                     <Link
                         to={`/${champion.name}`}
                         key={champion.name}
-                        className="card border bg-white shadow-lg rounded-lg p-4 w-72 h-48 text-center hover:text-gray-400 transform hover:-translate-y-1 transition-transform duration-300 flex flex-col items-center justify-center"
+                        className="card border bg-cover bg-center text-white shadow-lg rounded-lg p-4 w-72 h-48 flex flex-col items-center justify-center"
+                        style={{
+                            backgroundImage: `url(${champion.splash})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center'
+                        }}
                     >
-                        <img
-                            alt={champion.name}
-                            className="w-24 h-24 mb-2"
-                            src={`https://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/${champion.id}.png`}
-                        />
-                        <h3 className="text-lg font-semibold">{champion.name}</h3>
-                        <h3 className="text-lg font-semibold">{champion.title}</h3>
+                        <div className="bg-black bg-opacity-50 p-2 mt-auto rounded">
+                            <h3 className="text-md font-semibold">{champion.name}</h3>
+                            <h3 className="text-md font-semibold">{champion.title}</h3>
+                        </div>
                     </Link>
                 ))}
             </div>

@@ -16,7 +16,7 @@ const ChampionDetail = () => {
             try {
                 // Fetch champion data
                 const champResponse = await fetch(champUrl);
-                if (!champResponse.ok) throw new Error(`Champion data fetch error: ${champResponse.status}. \n Champion info not added yet.`);
+                if (!champResponse.ok) throw new Error(`Champion data fetch error: ${champResponse.status}. \n Champion info not added yet by Riot Games`);
                 const champJson = await champResponse.json();
                 const champData = champJson.data[championName];
 
@@ -33,7 +33,7 @@ const ChampionDetail = () => {
 
                     // Get skins
                     const skinResponse = await fetch(skillUrl);
-                    if (!skinResponse.ok) throw new Error(`Skin data fetch error: ${skinResponse.status}. \n Champion info not added yet.`);
+                    if (!skinResponse.ok) throw new Error(`Skin data fetch error: ${skinResponse.status}. \n Champion info not added yet by Riot Games.`);
                     const skinJson = await skinResponse.json();
                     const skinData = skinJson.data[championName];
 

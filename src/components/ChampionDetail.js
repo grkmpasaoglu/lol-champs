@@ -139,6 +139,7 @@ const ChampionDetail = () => {
                     </div>
                 </div>
             </div>
+            <p className='my-2 text-center text-2xl text-white'> Made by Görkem Paşaoğlu</p>
         </div>
     );
 };

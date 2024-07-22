@@ -13,7 +13,6 @@ function App() {
         <Route path="/:championName" element={<ChampionDetail />} />
       </Routes>
     </Router>
-
   );
 }
 

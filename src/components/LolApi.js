@@ -103,6 +103,7 @@ const LolApi = () => {
                     <div className="flex justify-center items-center text-white text-lg py-4">No champions found</div>
                 )}
             </div>
+            <p className='my-2 text-center text-2xl text-white'> Made by Görkem Paşaoğlu</p>
         </div>
     );
 };
